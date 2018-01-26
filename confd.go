@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"runtime"
 	"syscall"
+	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/kelseyhightower/confd/backends"
 	"github.com/kelseyhightower/confd/log"
@@ -24,6 +26,9 @@ func main() {
 	}
 
 	log.Info("Starting confd")
+	go func() {
+    http.ListenAndServe(":16060", nil)
+  }()
 
 	storeClient, err := backends.New(backendsConfig)
 	if err != nil {
